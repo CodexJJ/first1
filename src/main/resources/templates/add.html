@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript" th:src="@{/js/jquery-1.12.4.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/type/all",
+            dataType: "json",
+            success: function (data) {
+                $("#a").append(data[0].name)
+                $("#b").append(data[1].name)
+                $("#c").append(data[2].name)
+            },
+            error: function () {
+                alert("系统错误");
+            }
+        });
+
+
+
+
+
+
+        function aa() {
+            var name=$("#name").val();
+            if(name==null||name==""){
+                alert("姓名不能为空")
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function bb() {
+            var phone=$("#phone").val();
+            if(phone==null||phone==""){
+                alert("电话号码不能为空")
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function cc() {
+            var type=$("#type").val();
+            if(type==null||type==0){
+                alert("清选择办卡类型")
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function dd() {
+            var yue=$("#yue").val();
+            if(yue==null||yue==""){
+                alert("清选择充值卡金额")
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function ee() {
+            var date=$("#date").val();
+            if(date==null||date==""){
+                alert("清选择开卡日期")
+                return false;
+            }else{
+                return true;
+            }
+        }
+//        $("#tijiao").click(function () {
+//            if(aa()&bb()&cc()&dd()&ee()){
+//                return true;
+//            }else {
+//                return false;
+        $("#tijiao").click(function () {
+
+            if (aa()&bb()&cc()&dd()&ee())
+            {
+                $("#form").submit();
+            }
+        });
+    });
+    </script>
+<body>
+<form method="post" id="form" action="/add">
+    <table border="1">
+        <tr style="text-align: center">
+            <td style="font-size: 25px"><b>添加健身卡信息</b></td>
+        </tr>
+        <tr>
+            <td>持卡人姓名(*)</td>
+            <td> <input type="text" name="user_name" id="name"><br></td>
+        </tr>
+        <tr><td>手机号(*)</td>
+        <td><input type="text" name="phone" id="phone"></td>
+        </tr>
+        <tr>
+            <td>健身卡类型(*)</td>
+            <!--<input type="text" name="card_type_id">-->
+            <td><select name="card_type_id" id="type">
+                <option value="0">请选择</option>
+                <option value="1" id="a"></option>
+                <option value="2" id="b"></option>
+                <option value="3" id="c"></option>
+            </select> </open></td>
+        </tr>
+        <tr>
+            <td>卡内余额(*)</td>
+            <td><input type="text" name="balance" id="yue"><br></td>
+        </tr>
+        <tr>
+            <td>开卡日期</td>
+            <td><input type="date" name="open_date" id="date"><br></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="提交" id="tijiao" ><br></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

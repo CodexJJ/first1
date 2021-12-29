@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("tr:even").css("background-color","yellow")
+            var a=$("#card_type")
+                $.ajax({
+                    type:"GET",
+                    url:"/type/all",
+                    dataType:"json",
+                    success:function (data) {
+//                        $("#card_type").empty();
+//                        $("#card_type").append("<option value='0'>--请选择--</option>")
+//                        for(var i=0;i<data.length;i++){
+//                            $("#card_type").append("<option value='data[i].id'>"+data[i].name+"</option>");
+//
+//                        }
+                        $("#a").append(data[0].name)
+                        $("#b").append(data[1].name)
+                        $("#c").append(data[2].name)
+                        var b=a.attr("www");
+                        if (b==0)
+                        {}else if (b==1)
+                        {
+                            $("#a").attr("selected","selected")
+                        }else if (b==2)
+                        {
+                            $("#b").attr("selected","selected")
+                        }else if (b==3)
+                        {
+                            $("#c").attr("selected","selected")
+                        }
+                    },
+                    error:function () {
+                        alert("系统错误");
+                    }
+                });
+                //跳转
+                $("#Bcard").click(function () {
+                   location.href="/toadd"
+                });
+
+                $("#card_type").blur(function () {
+                    var id=$("#card_type").val();
+                    location.href="/all?id="+id;
+                })
+
+            })
+        function update(id,status) {
+            var cardtype=$("#card_type").val();
+            var a=null;
+            if(status==0)
+            {
+                a="激活";
+            }
+            else
+            {
+                a="冻结";
+            }
+            var b=confirm("您确定要"+a+"健身卡吗？");
+            if (b)
+            {
+                $.ajax({
+                    type:"GET",
+                    url: "/update?id="+id+"&status="+status,
+                    dataType:"json",
+                    success:function (data) {
+                        if (data=="true")
+                        {
+                            location.href="/all?id="+cardtype;
+                        }
+                        else
+                        {
+                            location.href="add.html";
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+<div align="center">
+    <h2>健身房会员卡管理系统</h2>
+    <form action="" method="post">
+        <select id="card_type" th:www="${name}">
+            <option value='0'>--请选择--</option>
+            <option value="1" id="a"></option>
+            <option value="2" id="b"></option>
+            <option value="3" id="c"></option>
+        </select>
+        <input type="button" value="办卡" id="Bcard" style="margin-left: 200px;">
+        <table border="1">
+            <tr>
+                <td>持卡人姓名</td>
+                <td>手机号</td>
+                <td>卡类型</td>
+                <td>卡状态</td>
+                <td>卡内余额</td>
+                <td>开卡日期</td>
+                <td>操作</td>
+            </tr>
+            <tr th:each="c:${gymCardList}">
+                <td th:text="${c.id}" hidden></td>
+                <td th:text="${c.user_name}"></td>
+                <td th:text="${c.phone}"></td>
+                <td th:text="${c.card_type.name}"></td>
+                <td th:if="${c.status} eq '1' ">激活</td>
+                <td th:if="${c.status} eq '0' " style="color: red";>冻结</td>
+
+                <td th:text="${c.balance}"></td>
+                <td th:text="${c.open_date}"></td>
+                <td th:if="${c.status} eq '0' "><a href="#" th:onclick="'javascript:update(\''+${c.id}+'\',\''+0+'\')'"> 激活</a></td>
+                <td th:if="${c.status} eq '1' "><a href="#" th:onclick="'javascript:update(\''+${c.id}+'\',\''+1+'\')'">冻结</a></td>
+
+            </tr>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>
